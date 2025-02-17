@@ -14,17 +14,18 @@
       font-family: Arial, sans-serif;
       background-color: #f0f0f0;
     }
-   #game-container {
-  margin-top: 100px; /* 원하는 값으로 조정 */
+    #game-container {
       text-align: center;
       background-color: #fff;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       position: relative;
+      margin-top: 150px; /* 게임 시작 전에는 아래로 */
+      transition: margin-top 0.5s ease-in-out;
     }
     #start-button, #submit-button {
-      background-color: #FFB5DB; /* 연핑크색 */
+      background-color: #FFB5DB;
       color: white;
       padding: 10px 20px;
       margin: 10px;
@@ -34,7 +35,7 @@
       font-size: 16px;
     }
     #start-button:hover, #submit-button:hover {
-      background-color: #FF90CE; /* 호버 시 조금 더 진한 연핑크색 */
+      background-color: #FF90CE;
     }
     #number-display {
       font-size: 2em;
@@ -60,31 +61,19 @@
       left: calc(50% - 50px);
       margin-top: -30px;
     }
-    /* 말풍선을 중앙에 배치 및 크기, 테두리 조정 */
     #speech-bubble {
       position: absolute;
       top: -120px;
       left: 50%;
       transform: translateX(-50%);
-      width: 200px;            /* 가로 크기 줄임 */
-      padding: 10px;           /* 패딩 줄임 */
+      width: 200px;
+      padding: 10px;
       background-color: #FFFFFF;
-      border: 1px solid #FFFFFF; /* 테두리 두께 얇게 */
       border-radius: 30px;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
       font-size: 14px;
       color: #333;
       text-align: center;
-    }
-    #speech-bubble:after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 10px;
-      border-style: solid;
-      border-color: #FFFFFF transparent transparent transparent;
     }
     #fireworks-container {
       position: absolute;
@@ -103,18 +92,9 @@
       animation: explode 1s forwards;
     }
     @keyframes explode {
-      0% {
-        transform: scale(0);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(1.1);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(1.2);
-        opacity: 0;
-      }
+      0% { transform: scale(0); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1.2); opacity: 0; }
     }
   </style>
 </head>
@@ -133,7 +113,7 @@
 
   <script>
     let originalNumber = "";
-    let successCount = 0; // 연속 성공 횟수 저장
+    let successCount = 0;
 
     document.getElementById("start-button").addEventListener("click", startGame);
     document.getElementById("submit-button").addEventListener("click", checkAnswer);
@@ -145,12 +125,15 @@
       document.getElementById("input-container").style.display = "block";
       document.getElementById("dog-image").style.display = "none";
       document.getElementById("speech-bubble").style.display = "none";
+
+      document.getElementById("game-container").style.marginTop = "0px";
+
       createFireworks();
       setTimeout(hideNumber, 2300);
     }
 
     function generateRandomNumber() {
-      let digits = successCount >= 30 ? 6 : 5; // 30번 성공 시 6자리 숫자 생성
+      let digits = successCount >= 30 ? 6 : 5;
       let min = Math.pow(10, digits - 1);
       let max = Math.pow(10, digits) - 1;
       return Math.floor(min + Math.random() * (max - min)).toString();
@@ -165,87 +148,49 @@
       let reversedNumber = originalNumber.split("").reverse().join("");
 
       if (userInput === reversedNumber) {
-        successCount++; // 성공 횟수 증가
-        alert(` 헥헥 🐶🦴            (O: ${successCount})`);
+        successCount++;
+        alert(` 헥헥 🐶🦴 (O: ${successCount})`);
         document.getElementById("user-input").value = "";
         startGame();
       } else {
         alert("아르르르 . . . 👹");
-        successCount = 0; // 실패하면 초기화
+        successCount = 0;
         location.reload();
       }
     }
-function createFireworks() {
-  const container = document.getElementById('fireworks-container');
-  const numberOfParticles = 5; // 파티클 개수
-  const centerX = window.innerWidth / 2; // 화면 중앙 X
-  const centerY = window.innerHeight / 2; // 화면 중앙 Y
 
-  for (let i = 0; i < numberOfParticles; i++) {
-    const particle = document.createElement('div');
-    particle.classList.add('firework');
+    function createFireworks() {
+      const container = document.getElementById('fireworks-container');
+      const numberOfParticles = 5;
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
 
-    // 초기 위치를 중앙으로 설정
-    particle.style.position = "absolute";
-    particle.style.left = `${centerX - 25}px`; // 중앙 위치에서 약간 조정
-    particle.style.top = `${centerY - 25}px`;  // 중앙 위치에서 약간 조정
-    particle.style.width = "50px"; // 크기 조정
-    particle.style.height = "50px";
-    particle.style.backgroundImage = `url('particle.png')`;
-    particle.style.backgroundSize = "cover";
-    particle.style.opacity = "0.8";
+      for (let i = 0; i < numberOfParticles; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('firework');
+        particle.style.left = `${centerX}px`;
+        particle.style.top = `${centerY}px`;
+        particle.style.backgroundImage = `url('particle.png')`;
 
-    // 컨테이너에 추가
-    container.appendChild(particle);
+        container.appendChild(particle);
 
-    // 랜덤한 회전 각도 적용 (0 ~ 360도)
-    const rotationAngle = Math.random() * 360; // 랜덤한 회전 각도
-    const rotationDirection = Math.random() > 0.5 ? 1 : -1; // 랜덤으로 회전 방향 (시계방향 또는 반시계방향)
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 150 + 100;
+        const targetX = centerX + Math.cos(angle) * distance;
+        const targetY = centerY + Math.sin(angle) * distance;
 
-    // 랜덤 회전을 위한 keyframes 추가
-    const rotateAnimationName = `rotateAnimation${i}`; // 고유 애니메이션 이름 생성
+        setTimeout(() => {
+          particle.style.transition = "left 1.5s ease-out, top 1.5s ease-out, opacity 1s ease-in";
+          particle.style.left = `${targetX}px`;
+          particle.style.top = `${targetY}px`;
+          particle.style.opacity = "0";
+        }, 10);
 
-    // 애니메이션 스타일을 동적으로 생성하여 추가
-    const styleSheet = document.styleSheets[0];  // 첫 번째 스타일시트에 접근
-    styleSheet.insertRule(`
-      @keyframes ${rotateAnimationName} {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(${rotationAngle * rotationDirection}deg); /* 랜덤 회전 방향 */
-        }
+        setTimeout(() => {
+          particle.remove();
+        }, 2000);
       }
-    `, styleSheet.cssRules.length);
-
-    // 애니메이션 속성 적용 (회전 시간을 3초로 설정)
-    particle.style.animation = `${rotateAnimationName} 2s ease-out`; // 3초 동안 회전
-
-    // 랜덤한 방향 및 거리 설정
-    const angle = Math.random() * Math.PI * 2; // 0 ~ 360도 방향
-    const distance = Math.random() * 100 + 200; // 50~200px까지 퍼지게
-    const targetX = centerX + Math.cos(angle) * distance;
-    const targetY = centerY + Math.sin(angle) * distance;
-
-    // 실제 이동 (left, top 직접 조정)
-    setTimeout(() => {
-      // 파티클의 이동을 위한 transition 설정
-      particle.style.transition = "left 2s ease-out, top 1s ease-out, opacity 1.5s ease-in";
-      particle.style.left = `${targetX}px`;
-      particle.style.top = `${targetY}px`;
-      particle.style.opacity = "0";
-
-      // 중력 효과 추가: 파티클이 천천히 떨어지게 하기 위해 top을 점진적으로 늘려주기
-      particle.style.transition += ", top 2s ease-out";  // 중력 효과 추가
-      particle.style.top = `${targetY + 20}px`; // 떨어지게 할 거리 추가
-    }, 10); // 스타일 적용을 위해 약간의 딜레이 추가
-
-    // 2초 후 파티클 제거
-    setTimeout(() => {
-      particle.remove();
-    }, 2000);
-  }
-}
+    }
   </script>
 </body>
 </html>
