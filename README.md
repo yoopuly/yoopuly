@@ -22,7 +22,6 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       position: relative;
       margin-top: 150px; /* 게임 시작 전에는 아래로 */
-      transition: margin-top 0.5s ease-in-out;
     }
     #start-button, #submit-button {
       background-color: #FFB5DB;
@@ -126,7 +125,8 @@
       document.getElementById("dog-image").style.display = "none";
       document.getElementById("speech-bubble").style.display = "none";
 
-      document.getElementById("game-container").style.marginTop = "0px";
+      // 애니메이션 없이 바로 원위치로 돌아갑니다
+      document.getElementById("game-container").style.marginTop = "30px";
 
       createFireworks();
       setTimeout(hideNumber, 2300);
@@ -153,10 +153,22 @@
         document.getElementById("user-input").value = "";
         startGame();
       } else {
-        alert("아르르르 . . . 👹");
+        showCorrectAnswer(reversedNumber); // 정답을 보여주는 함수 호출
+        setTimeout(() => {
+          alert("아르르르 . . . 👹");
+        }, 100); // 0.1초 후에 alert 표시
         successCount = 0;
-        location.reload();
+        setTimeout(() => location.reload(), 3000); // 3초 후 리로드
       }
+    }
+
+    function showCorrectAnswer(correctAnswer) {
+      const numberDisplay = document.getElementById("number-display");
+      
+      // 원래 표시된 숫자와 동일한 스타일로 정답을 표시
+      numberDisplay.style.fontSize = "2em";  // 크기 일치
+      numberDisplay.style.color = "#333";  // 색상 일치
+      numberDisplay.innerHTML = `💥 ${correctAnswer} 💥`;
     }
 
     function createFireworks() {
