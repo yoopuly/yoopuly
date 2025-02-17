@@ -14,9 +14,8 @@
       font-family: Arial, sans-serif;
       background-color: #f0f0f0;
     }
-#game-container {
+   #game-container {
   margin-top: 50px; /* 원하는 값으로 조정 */
-}
       text-align: center;
       background-color: #fff;
       padding: 20px;
