@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -106,8 +107,12 @@
         transform: scale(0);
         opacity: 1;
       }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
       100% {
-        transform: scale(1);
+        transform: scale(1.2);
         opacity: 0;
       }
     }
@@ -116,7 +121,7 @@
 <body>
   <div id="game-container">
     <img id="dog-image" src="particle.png" alt="">
-    <div id="speech-bubble">˚ 𓏸 ₊  언니 가티 게임하자 ! ‧𓂂𓏸</div>
+    <div id="speech-bubble">˚ 𓏸 ₊  언니 가티 게임하자 ! ‧ 𓂂𓏸</div>
     <button id="start-button">게임 시작</button>
     <div id="number-display"></div>
     <div id="input-container">
@@ -156,11 +161,11 @@
       let reversedNumber = originalNumber.split("").reverse().join("");
 
       if (userInput === reversedNumber) {
-        alert(" 헥 헥 🐶🤍");
+        alert(" 정답 ! 🐶🦴");
         document.getElementById("user-input").value = "";
         startGame();
       } else {
-        alert("아르르르 . . . 🛸");
+        alert("아르르르 . . . 👹");
         location.reload();
       }
     }
