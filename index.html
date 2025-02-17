@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -121,7 +120,7 @@
 <body>
   <div id="game-container">
     <img id="dog-image" src="particle.png" alt="">
-    <div id="speech-bubble">˚ 𓏸 ₊  언니 가티 게임하자 ! ‧ 𓂂𓏸</div>
+    <div id="speech-bubble">˚ 𓏸 ₊  언니 가티 게임하자 ! ‧𓂂𓏸</div>
     <button id="start-button">게임 시작</button>
     <div id="number-display"></div>
     <div id="input-container">
@@ -133,43 +132,48 @@
 
   <script>
     let originalNumber = "";
+let successCount = 0; // 연속 성공 횟수 저장
 
-    document.getElementById("start-button").addEventListener("click", startGame);
-    document.getElementById("submit-button").addEventListener("click", checkAnswer);
+document.getElementById("start-button").addEventListener("click", startGame);
+document.getElementById("submit-button").addEventListener("click", checkAnswer);
 
-    function startGame() {
-      originalNumber = generateRandomNumber();
-      document.getElementById("number-display").innerText = originalNumber;
-      document.getElementById("start-button").style.display = "none";
-      document.getElementById("input-container").style.display = "block";
-      document.getElementById("dog-image").style.display = "none";
-      document.getElementById("speech-bubble").style.display = "none";
-      createFireworks();
-      setTimeout(hideNumber, 2300);
-    }
+function startGame() {
+  originalNumber = generateRandomNumber();
+  document.getElementById("number-display").innerText = originalNumber;
+  document.getElementById("start-button").style.display = "none";
+  document.getElementById("input-container").style.display = "block";
+  document.getElementById("dog-image").style.display = "none";
+  document.getElementById("speech-bubble").style.display = "none";
+  createFireworks();
+  setTimeout(hideNumber, 2300);
+}
 
-    function generateRandomNumber() {
-      return Math.floor(10000 + Math.random() * 90000).toString();
-    }
+function generateRandomNumber() {
+  let digits = successCount >= 30 ? 6 : 5; // 30번 성공 시 6자리 숫자 생성
+  let min = Math.pow(10, digits - 1);
+  let max = Math.pow(10, digits) - 1;
+  return Math.floor(min + Math.random() * (max - min)).toString();
+}
 
-    function hideNumber() {
-      document.getElementById("number-display").innerText = "";
-    }
+function hideNumber() {
+  document.getElementById("number-display").innerText = "";
+}
 
-    function checkAnswer() {
-      let userInput = document.getElementById("user-input").value;
-      let reversedNumber = originalNumber.split("").reverse().join("");
+function checkAnswer() {
+  let userInput = document.getElementById("user-input").value;
+  let reversedNumber = originalNumber.split("").reverse().join("");
 
-      if (userInput === reversedNumber) {
-        alert(" 정답 ! 🐶🦴");
-        document.getElementById("user-input").value = "";
-        startGame();
-      } else {
-        alert("아르르르 . . . 👹");
-        location.reload();
-      }
-    }
-
+  if (userInput === reversedNumber) {
+    successCount++; // 성공 횟수 증가
+    alert(` 헥 헥 🐶🤍 (성공 횟수: ${successCount})`);
+    document.getElementById("user-input").value = "";
+    startGame();
+  } else {
+    alert("아르르르 . . . 🛸");
+    successCount = 0; // 실패하면 초기화
+    location.reload();
+  }
+}
     function createFireworks() {
       const container = document.getElementById('fireworks-container');
       const numberOfFireworks = 10;
