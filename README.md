@@ -106,10 +106,10 @@
         transform: scale(0);
         opacity: 1;
       }
-  50% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
       100% {
         transform: scale(1.2);
         opacity: 0;
@@ -132,75 +132,119 @@
 
   <script>
     let originalNumber = "";
-let successCount = 0; // 연속 성공 횟수 저장
+    let successCount = 0; // 연속 성공 횟수 저장
 
-document.getElementById("start-button").addEventListener("click", startGame);
-document.getElementById("submit-button").addEventListener("click", checkAnswer);
+    document.getElementById("start-button").addEventListener("click", startGame);
+    document.getElementById("submit-button").addEventListener("click", checkAnswer);
 
-function startGame() {
-  originalNumber = generateRandomNumber();
-  document.getElementById("number-display").innerText = originalNumber;
-  document.getElementById("start-button").style.display = "none";
-  document.getElementById("input-container").style.display = "block";
-  document.getElementById("dog-image").style.display = "none";
-  document.getElementById("speech-bubble").style.display = "none";
-  createFireworks();
-  setTimeout(hideNumber, 2300);
-}
+    function startGame() {
+      originalNumber = generateRandomNumber();
+      document.getElementById("number-display").innerText = originalNumber;
+      document.getElementById("start-button").style.display = "none";
+      document.getElementById("input-container").style.display = "block";
+      document.getElementById("dog-image").style.display = "none";
+      document.getElementById("speech-bubble").style.display = "none";
+      createFireworks();
+      setTimeout(hideNumber, 2300);
+    }
 
-function generateRandomNumber() {
-  let digits = successCount >= 30 ? 6 : 5; // 30번 성공 시 6자리 숫자 생성
-  let min = Math.pow(10, digits - 1);
-  let max = Math.pow(10, digits) - 1;
-  return Math.floor(min + Math.random() * (max - min)).toString();
-}
+    function generateRandomNumber() {
+      let digits = successCount >= 30 ? 6 : 5; // 30번 성공 시 6자리 숫자 생성
+      let min = Math.pow(10, digits - 1);
+      let max = Math.pow(10, digits) - 1;
+      return Math.floor(min + Math.random() * (max - min)).toString();
+    }
 
-function hideNumber() {
-  document.getElementById("number-display").innerText = "";
-}
+    function hideNumber() {
+      document.getElementById("number-display").innerText = "";
+    }
 
-function checkAnswer() {
-  let userInput = document.getElementById("user-input").value;
-  let reversedNumber = originalNumber.split("").reverse().join("");
+    function checkAnswer() {
+      let userInput = document.getElementById("user-input").value;
+      let reversedNumber = originalNumber.split("").reverse().join("");
 
-  if (userInput === reversedNumber) {
-    successCount++; // 성공 횟수 증가
-    alert(` 헥 헥 🐶🤍 (성공 횟수: ${successCount})`);
-    document.getElementById("user-input").value = "";
-    startGame();
-  } else {
-    alert("아르르르 . . . 🛸");
-    successCount = 0; // 실패하면 초기화
-    location.reload();
-  }
-}
-    function createFireworks() {
-      const container = document.getElementById('fireworks-container');
-      const numberOfFireworks = 10;
-
-      for (let i = 0; i < numberOfFireworks; i++) {
-        const firework = document.createElement('div');
-        firework.classList.add('firework');
-
-        // 랜덤 위치 설정
-        const x = Math.random() * window.innerWidth;
-        const y = Math.random() * window.innerHeight;
-        firework.style.left = `${x}px`;
-        firework.style.top = `${y}px`;
-
-        // 'particle.png'와 '하트.png' 중 하나를 랜덤 선택하여 적용
-        const images = ['particle.png'];
-        const randomImage = images[Math.floor(Math.random() * images.length)];
-        firework.style.backgroundImage = `url('${randomImage}')`;
-
-        container.appendChild(firework);
-
-        // 애니메이션 종료 후 폭죽 제거 (3초 후)
-        setTimeout(() => {
-          firework.remove();
-        }, 3000);
+      if (userInput === reversedNumber) {
+        successCount++; // 성공 횟수 증가
+        alert(` 헥헥 🐶🦴            (O: ${successCount})`);
+        document.getElementById("user-input").value = "";
+        startGame();
+      } else {
+        alert("아르르르 . . . 👹");
+        successCount = 0; // 실패하면 초기화
+        location.reload();
       }
     }
+function createFireworks() {
+  const container = document.getElementById('fireworks-container');
+  const numberOfParticles = 5; // 파티클 개수
+  const centerX = window.innerWidth / 2; // 화면 중앙 X
+  const centerY = window.innerHeight / 2; // 화면 중앙 Y
+
+  for (let i = 0; i < numberOfParticles; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('firework');
+
+    // 초기 위치를 중앙으로 설정
+    particle.style.position = "absolute";
+    particle.style.left = `${centerX - 25}px`; // 중앙 위치에서 약간 조정
+    particle.style.top = `${centerY - 25}px`;  // 중앙 위치에서 약간 조정
+    particle.style.width = "50px"; // 크기 조정
+    particle.style.height = "50px";
+    particle.style.backgroundImage = `url('particle.png')`;
+    particle.style.backgroundSize = "cover";
+    particle.style.opacity = "0.8";
+
+    // 컨테이너에 추가
+    container.appendChild(particle);
+
+    // 랜덤한 회전 각도 적용 (0 ~ 360도)
+    const rotationAngle = Math.random() * 360; // 랜덤한 회전 각도
+    const rotationDirection = Math.random() > 0.5 ? 1 : -1; // 랜덤으로 회전 방향 (시계방향 또는 반시계방향)
+
+    // 랜덤 회전을 위한 keyframes 추가
+    const rotateAnimationName = `rotateAnimation${i}`; // 고유 애니메이션 이름 생성
+
+    // 애니메이션 스타일을 동적으로 생성하여 추가
+    const styleSheet = document.styleSheets[0];  // 첫 번째 스타일시트에 접근
+    styleSheet.insertRule(`
+      @keyframes ${rotateAnimationName} {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(${rotationAngle * rotationDirection}deg); /* 랜덤 회전 방향 */
+        }
+      }
+    `, styleSheet.cssRules.length);
+
+    // 애니메이션 속성 적용 (회전 시간을 3초로 설정)
+    particle.style.animation = `${rotateAnimationName} 2s ease-out`; // 3초 동안 회전
+
+    // 랜덤한 방향 및 거리 설정
+    const angle = Math.random() * Math.PI * 2; // 0 ~ 360도 방향
+    const distance = Math.random() * 100 + 200; // 50~200px까지 퍼지게
+    const targetX = centerX + Math.cos(angle) * distance;
+    const targetY = centerY + Math.sin(angle) * distance;
+
+    // 실제 이동 (left, top 직접 조정)
+    setTimeout(() => {
+      // 파티클의 이동을 위한 transition 설정
+      particle.style.transition = "left 2s ease-out, top 1s ease-out, opacity 1.5s ease-in";
+      particle.style.left = `${targetX}px`;
+      particle.style.top = `${targetY}px`;
+      particle.style.opacity = "0";
+
+      // 중력 효과 추가: 파티클이 천천히 떨어지게 하기 위해 top을 점진적으로 늘려주기
+      particle.style.transition += ", top 2s ease-out";  // 중력 효과 추가
+      particle.style.top = `${targetY + 20}px`; // 떨어지게 할 거리 추가
+    }, 10); // 스타일 적용을 위해 약간의 딜레이 추가
+
+    // 2초 후 파티클 제거
+    setTimeout(() => {
+      particle.remove();
+    }, 2000);
+  }
+}
   </script>
 </body>
 </html>
