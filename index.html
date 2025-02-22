@@ -21,7 +21,7 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       position: relative;
-      margin-top: 150px; /* 게임 시작 전에는 아래로 */
+      margin-top: 150px;
     }
     #start-button, #submit-button {
       background-color: #FFB5DB;
@@ -88,12 +88,6 @@
       width: 50px;
       height: 50px;
       background-size: cover;
-      animation: explode 1s forwards;
-    }
-    @keyframes explode {
-      0% { transform: scale(0); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 1; }
-      100% { transform: scale(1.2); opacity: 0; }
     }
   </style>
 </head>
@@ -125,7 +119,6 @@
       document.getElementById("dog-image").style.display = "none";
       document.getElementById("speech-bubble").style.display = "none";
 
-      // 애니메이션 없이 바로 원위치로 돌아갑니다
       document.getElementById("game-container").style.marginTop = "30px";
 
       createFireworks();
@@ -153,21 +146,19 @@
         document.getElementById("user-input").value = "";
         startGame();
       } else {
-        showCorrectAnswer(reversedNumber); // 정답을 보여주는 함수 호출
+        showCorrectAnswer(reversedNumber);
         setTimeout(() => {
           alert("아르르르 . . . 👹");
-        }, 100); // 0.1초 후에 alert 표시
+        }, 100);
         successCount = 0;
-        setTimeout(() => location.reload(), 3000); // 3초 후 리로드
+        setTimeout(() => location.reload(), 3000);
       }
     }
 
     function showCorrectAnswer(correctAnswer) {
       const numberDisplay = document.getElementById("number-display");
-      
-      // 원래 표시된 숫자와 동일한 스타일로 정답을 표시
-      numberDisplay.style.fontSize = "2em";  // 크기 일치
-      numberDisplay.style.color = "#333";  // 색상 일치
+      numberDisplay.style.fontSize = "2em";
+      numberDisplay.style.color = "#333";
       numberDisplay.innerHTML = `💥 ${correctAnswer} 💥`;
     }
 
@@ -190,9 +181,14 @@
         const distance = Math.random() * 150 + 100;
         const targetX = centerX + Math.cos(angle) * distance;
         const targetY = centerY + Math.sin(angle) * distance;
+        
+        const randomRotationSpeed = (Math.random() * 2 + 2).toFixed(1); // 2~4초
+        const randomRotationDirection = Math.random() < 0.5 ? -1 : 1;
+        const randomRotationDegree = randomRotationDirection * (Math.random() * 360 + 180);
 
         setTimeout(() => {
-          particle.style.transition = "left 1.5s ease-out, top 1.5s ease-out, opacity 1s ease-in";
+          particle.style.transition = `left 1.5s ease-out, top 1.5s ease-out, opacity 1s ease-in, transform ${randomRotationSpeed}s linear`;
+          particle.style.transform = `rotate(${randomRotationDegree}deg)`;
           particle.style.left = `${targetX}px`;
           particle.style.top = `${targetY}px`;
           particle.style.opacity = "0";
@@ -200,7 +196,7 @@
 
         setTimeout(() => {
           particle.remove();
-        }, 2000);
+        }, 4000);
       }
     }
   </script>
