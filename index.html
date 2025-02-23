@@ -107,6 +107,7 @@
   <script>
     let originalNumber = "";
     let successCount = 0;
+    let firstFirework = true; // 첫 실행 여부 확인 변수
 
     document.getElementById("start-button").addEventListener("click", startGame);
     document.getElementById("submit-button").addEventListener("click", checkAnswer);
@@ -164,7 +165,7 @@
 
     function createFireworks() {
       const container = document.getElementById('fireworks-container');
-      const numberOfParticles = 5;
+      const numberOfParticles = firstFirework ? 5 : 1; // 첫 실행에는 5개, 이후에는 3개
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
 
@@ -173,7 +174,9 @@
         particle.classList.add('firework');
         particle.style.left = `${centerX}px`;
         particle.style.top = `${centerY}px`;
-        particle.style.backgroundImage = `url('particle.png')`;
+
+        // 첫 번째 실행일 때만 particle.png 사용, 이후에는 particle2.png 사용
+        particle.style.backgroundImage = firstFirework ? `url('particle.png')` : `url('particle2.png')`;
 
         container.appendChild(particle);
 
@@ -181,7 +184,8 @@
         const distance = Math.random() * 150 + 100;
         const targetX = centerX + Math.cos(angle) * distance;
         const targetY = centerY + Math.sin(angle) * distance;
-        
+
+        // 랜덤 회전 값 추가
         const randomRotationSpeed = (Math.random() * 2 + 2).toFixed(1); // 2~4초
         const randomRotationDirection = Math.random() < 0.5 ? -1 : 1;
         const randomRotationDegree = randomRotationDirection * (Math.random() * 360 + 180);
@@ -198,6 +202,8 @@
           particle.remove();
         }, 4000);
       }
+
+      firstFirework = false; // 첫 실행 후 변경하여 이후에는 particle2.png 사용
     }
   </script>
 </body>
