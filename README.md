@@ -6,4 +6,4 @@
 4. 기억의 이미지화 트레이닝으로 기억력 향상에 도움이 되기위한 게임입니다
 
 
-kong.png
+<img id="dog-image" src="kong.png" alt="">
